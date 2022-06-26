@@ -29,7 +29,12 @@ func TestNewLogger(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewLogger(tt.args.logLevel, tt.args.development, tt.args.disableCaller, tt.args.disableStacktrace)
+			got, err := NewLogger(
+				tt.args.logLevel,
+				tt.args.development,
+				tt.args.disableCaller,
+				tt.args.disableStacktrace,
+			)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewLogger() error = %v, wantErr %v", err, tt.wantErr)
 				return
