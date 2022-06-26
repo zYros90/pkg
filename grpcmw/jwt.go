@@ -11,15 +11,21 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-type JwtMW struct {
-	Key []byte
+type jwtConfig struct {
+	Key    []byte
+	logger *zap.Logger
 }
 
 const BearerKey = "Bearer"
 
-func (m *JwtMW) NewJwtMW(
+func NewJwtMW(
+	key string,
 	logger *zap.Logger,
 ) func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	m := &jwtConfig{
+		Key:    []byte(key),
+		logger: logger,
+	}
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		md, exist := metadata.FromIncomingContext(ctx)
 		if !exist {
@@ -46,7 +52,7 @@ func (m *JwtMW) NewJwtMW(
 	}
 }
 
-func (m *JwtMW) validateJWT(tokenString string) (map[string]interface{}, error) {
+func (m *jwtConfig) validateJWT(tokenString string) (map[string]interface{}, error) {
 	claims := jwt.MapClaims{}
 
 	token, err := jwt.ParseWithClaims(
