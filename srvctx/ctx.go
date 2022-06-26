@@ -3,14 +3,14 @@ package srvctx
 import "context"
 
 // server context
-type SrvCtx struct {
-	ctx      context.Context
+type Ctx struct {
+	context.Context
 	Username string
 }
 
-func NewSrvCtx(ctx context.Context, username string) *SrvCtx {
-	return &SrvCtx{
-		ctx:      ctx,
-		Username: username,
+func New(ctx context.Context, username string) *Ctx {
+	return &Ctx{
+		ctx,
+		username,
 	}
 }
