@@ -22,10 +22,23 @@ var (
 	ErrJWTInvalid = echo.NewHTTPError(http.StatusForbidden, "invalid or expired jwt")
 )
 
-func JWT(key string) echo.MiddlewareFunc {
-	c := JWTConfig{}
-	c.SigningKey = []byte(key)
+func JWT(key string, pathsToSkip []string) echo.MiddlewareFunc {
+	c := JWTConfig{
+		Skipper:    skipper(pathsToSkip),
+		SigningKey: []byte(key),
+	}
 	return ValidateJWT(c)
+}
+
+func skipper(paths []string) func(c echo.Context) bool {
+	return func(c echo.Context) bool {
+		for _, path := range paths {
+			if c.Path() == path {
+				return true
+			}
+		}
+		return false
+	}
 }
 
 func ValidateJWT(config JWTConfig) echo.MiddlewareFunc {
