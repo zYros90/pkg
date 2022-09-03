@@ -47,12 +47,13 @@ func TestGenerateJWTHS256(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			token, err := GenerateJWTHS256(tt.args.secret, tt.args.claimsMap, tt.args.expire)
+			j := New()
+			token, err := j.GenerateJWTHS256(tt.args.secret, tt.args.claimsMap, tt.args.expire)
 			if (err != nil) != tt.wantGenerateErr {
 				t.Errorf("GenerateJWTHS256() error = %v, wantErr %v", err, tt.wantGenerateErr)
 				return
 			}
-			claimMap, err := ValidateJWTHS256([]byte(tt.args.secret), token)
+			claimMap, err := j.ValidateJWTHS256([]byte(tt.args.secret), token)
 			if (err != nil) != tt.wantValidateErr {
 				t.Errorf("ValidateJWTHS256() error = %v, wantErr %v", err, tt.wantGenerateErr)
 				return

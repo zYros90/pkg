@@ -7,7 +7,11 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateJWTHS256(
+type JWT struct{}
+
+func New() *JWT { return &JWT{} }
+
+func (j *JWT) GenerateJWTHS256(
 	secret string,
 	claimsMap map[string]string,
 	expire time.Duration,
@@ -22,7 +26,7 @@ func GenerateJWTHS256(
 	return token.SignedString(s)
 }
 
-func ValidateJWTHS256(key []byte, jwtToken string) (map[string]string, error) {
+func (j *JWT) ValidateJWTHS256(key []byte, jwtToken string) (map[string]string, error) {
 	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

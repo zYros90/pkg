@@ -39,12 +39,13 @@ func TestHashPassword(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := HashPassword(tt.args.password)
+			h := New()
+			got, err := h.HashPassword(tt.args.password)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("HashPassword() = %v", got)
 			}
 
-			ok := CheckPasswordHash(tt.pswdToCompare, got)
+			ok := h.CheckPasswordHash(tt.pswdToCompare, got)
 			if !ok && !tt.wantMismatch {
 				t.Errorf("HashPassword() = %v, want %v", got, tt.pswdToCompare)
 			}
